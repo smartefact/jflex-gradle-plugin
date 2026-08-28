@@ -1,0 +1,7 @@
+# Git attributes
+# Reference: https://git-scm.com/docs/gitattributes
+
+* text=auto eol=lf
+
+*.bat text eol=crlf
+gradlew text eol=lf
