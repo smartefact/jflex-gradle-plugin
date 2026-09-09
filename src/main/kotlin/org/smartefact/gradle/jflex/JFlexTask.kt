@@ -65,7 +65,7 @@ abstract class JFlexTask @Inject constructor(
      *
      * JFlex option: `-d`
      *
-     * Defaults to `$buildDir/generated/jflex`
+     * Defaults to `$buildDir/generated/sources/jflex/java`
      */
     @get:OutputDirectory
     abstract val outputDirectory: DirectoryProperty

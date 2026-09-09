@@ -60,23 +60,23 @@ The `jflex` extension allows you to define properties shared by all JFlex tasks.
 
 It has the following properties:
 
-| Property             | Description                                                                                             | Default value               |
-|----------------------|---------------------------------------------------------------------------------------------------------|-----------------------------|
-| `jflexVersion`       | Version of JFlex                                                                                        | `1.9.1`                     |
-| `encoding`           | Encoding of the JFlex and generated Java files                                                          | `UTF-8`                     |
-| `outputDirectory`    | Output directory                                                                                        | `$buildDir/generated/jflex` |
-| `skeletonFile`       | External skeleton file to use                                                                           |                             |
-| `skipDfaMin`         | Whether to skip the DFA minimization step                                                               | `false`                     |
-| `jlex`               | Whether to try even harder to comply with the JLex interpretation of specs                              | `false`                     |
-| `dump`               | Whether to display the transition tables of NFA, initial DFA and minimized DFA                          | `false`                     |
-| `legacyDot`          | Whether the dot (`.`) meta character matches `[^\n]` instead of `[^\n\r\u000B\u000C\u0085\u2028\u2029]` | `false`                     |
-| `quiet`              | Whether to display the error messages only                                                              | `false`                     |
-| `warnUnused`         | Whether to display the corresponding warnings                                                           | `false`                     |
-| `warnNeverMatch`     | Whether to display the corresponding warnings                                                           | `false`                     |
-| `warnEmptyMatch`     | Whether to display the corresponding warnings                                                           | `false`                     |
-| `warnCupsymAfterCup` | Whether to display the corresponding warnings                                                           | `false`                     |
-| `warnUnicodeTooLong` | Whether to display the corresponding warnings                                                           | `false`                     |
-| `warnAll`            | Whether to display all warnings                                                                         | `false`                     |
+| Property             | Description                                                                                             | Default value                            |
+|----------------------|---------------------------------------------------------------------------------------------------------|------------------------------------------|
+| `jflexVersion`       | Version of JFlex                                                                                        | `1.9.1`                                  |
+| `encoding`           | Encoding of the JFlex and generated Java files                                                          | `UTF-8`                                  |
+| `outputDirectory`    | Output directory                                                                                        | `$buildDir/generated/sources/jflex/java` |
+| `skeletonFile`       | External skeleton file to use                                                                           |                                          |
+| `skipDfaMin`         | Whether to skip the DFA minimization step                                                               | `false`                                  |
+| `jlex`               | Whether to try even harder to comply with the JLex interpretation of specs                              | `false`                                  |
+| `dump`               | Whether to display the transition tables of NFA, initial DFA and minimized DFA                          | `false`                                  |
+| `legacyDot`          | Whether the dot (`.`) meta character matches `[^\n]` instead of `[^\n\r\u000B\u000C\u0085\u2028\u2029]` | `false`                                  |
+| `quiet`              | Whether to display the error messages only                                                              | `false`                                  |
+| `warnUnused`         | Whether to display the corresponding warnings                                                           | `false`                                  |
+| `warnNeverMatch`     | Whether to display the corresponding warnings                                                           | `false`                                  |
+| `warnEmptyMatch`     | Whether to display the corresponding warnings                                                           | `false`                                  |
+| `warnCupsymAfterCup` | Whether to display the corresponding warnings                                                           | `false`                                  |
+| `warnUnicodeTooLong` | Whether to display the corresponding warnings                                                           | `false`                                  |
+| `warnAll`            | Whether to display all warnings                                                                         | `false`                                  |
 
 ## JFlex task
 
