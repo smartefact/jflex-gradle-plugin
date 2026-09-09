@@ -7,10 +7,7 @@ import org.gradle.api.Project
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.Optional
-import org.gradle.api.tasks.OutputDirectory
 
 /**
  * JFlex project extension.
@@ -37,7 +34,6 @@ abstract class JFlexExtension(
      *
      * Defaults to `UTF-8`
      */
-    @get:Input
     abstract val encoding: Property<String>
     init {
         encoding.convention(Charsets.UTF_8.name())
@@ -54,7 +50,6 @@ abstract class JFlexExtension(
      *
      * Defaults to `$buildDir/generated/jflex`
      */
-    @get:OutputDirectory
     abstract val outputDirectory: DirectoryProperty
     init {
         outputDirectory.convention(project.layout.buildDirectory.dir("generated/jflex"))
@@ -69,7 +64,6 @@ abstract class JFlexExtension(
      *
      * JFlex option: `--skel`
      */
-    @get:InputFile
     @get:Optional
     abstract val skeletonFile: RegularFileProperty
 
@@ -84,7 +78,6 @@ abstract class JFlexExtension(
      *
      * Defaults to `false`
      */
-    @get:Input
     abstract val skipDfaMin: Property<Boolean>
     init {
         skipDfaMin.convention(false)
@@ -97,7 +90,6 @@ abstract class JFlexExtension(
      *
      * Defaults to `false`
      */
-    @get:Input
     abstract val jlex: Property<Boolean>
     init {
         jlex.convention(false)
@@ -110,7 +102,6 @@ abstract class JFlexExtension(
      *
      * Defaults to `false`
      */
-    @get:Input
     abstract val dump: Property<Boolean>
     init {
         dump.convention(false)
@@ -123,7 +114,6 @@ abstract class JFlexExtension(
      *
      * Defaults to `false`
      */
-    @get:Input
     abstract val legacyDot: Property<Boolean>
     init {
         legacyDot.convention(false)
@@ -136,7 +126,6 @@ abstract class JFlexExtension(
      *
      * Defaults to `false`
      */
-    @get:Input
     abstract val quiet: Property<Boolean>
     init {
         quiet.convention(false)
@@ -149,7 +138,6 @@ abstract class JFlexExtension(
      *
      * Defaults to `false`
      */
-    @get:Input
     abstract val warnUnused: Property<Boolean>
     init {
         warnUnused.convention(false)
@@ -162,7 +150,6 @@ abstract class JFlexExtension(
      *
      * Defaults to `false`
      */
-    @get:Input
     abstract val warnNeverMatch: Property<Boolean>
     init {
         warnNeverMatch.convention(false)
@@ -175,7 +162,6 @@ abstract class JFlexExtension(
      *
      * Defaults to `false`
      */
-    @get:Input
     abstract val warnEmptyMatch: Property<Boolean>
     init {
         warnEmptyMatch.convention(false)
@@ -188,7 +174,6 @@ abstract class JFlexExtension(
      *
      * Defaults to `false`
      */
-    @get:Input
     abstract val warnCupsymAfterCup: Property<Boolean>
     init {
         warnCupsymAfterCup.convention(false)
@@ -201,7 +186,6 @@ abstract class JFlexExtension(
      *
      * Defaults to `false`
      */
-    @get:Input
     abstract val warnUnicodeTooLong: Property<Boolean>
     init {
         warnUnicodeTooLong.convention(false)
@@ -214,7 +198,6 @@ abstract class JFlexExtension(
      *
      * Defaults to `false`
      */
-    @get:Input
     abstract val warnAll: Property<Boolean>
     init {
         warnAll.convention(false)
