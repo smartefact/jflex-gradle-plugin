@@ -6,8 +6,11 @@ import java.nio.charset.Charset
 import javax.inject.Inject
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
+import org.gradle.api.file.Directory
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.file.ProjectLayout
 import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.internal.file.FileOperations
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Classpath
@@ -25,14 +28,12 @@ import org.gradle.workers.WorkerExecutor
 /**
  * JFlex task.
  *
- * This class requires the project to have a [JFlexExtension].
- *
  * @author Laurent Pireyn
  */
 @CacheableTask
-abstract class JFlexTask : DefaultTask() {
-    private val jflexExtension = project.extensions.getByType(JFlexExtension::class.java)
-
+abstract class JFlexTask @Inject constructor(
+    layout: ProjectLayout
+) : DefaultTask() {
     /**
      * Input files.
      */
@@ -54,9 +55,6 @@ abstract class JFlexTask : DefaultTask() {
      */
     @get:Input
     abstract val encoding: Property<String>
-    init {
-        encoding.convention(jflexExtension.encoding)
-    }
 
     fun encoding(charset: Charset) {
         encoding.set(charset.name())
@@ -71,12 +69,9 @@ abstract class JFlexTask : DefaultTask() {
      */
     @get:OutputDirectory
     abstract val outputDirectory: DirectoryProperty
-    init {
-        outputDirectory.convention(jflexExtension.outputDirectory)
-    }
 
     fun outputDirectory(outputDirectory: Any) {
-        this.outputDirectory.set(project.file(outputDirectory))
+        this.outputDirectory.set(fileOperations.file(outputDirectory))
     }
 
     /**
@@ -88,12 +83,9 @@ abstract class JFlexTask : DefaultTask() {
     @get:Optional
     @get:PathSensitive(PathSensitivity.NONE)
     abstract val skeletonFile: RegularFileProperty
-    init {
-        skeletonFile.convention(jflexExtension.skeletonFile)
-    }
 
     fun skeletonFile(skeletonFile: Any) {
-        this.skeletonFile.set(project.file(skeletonFile))
+        this.skeletonFile.set(fileOperations.file(skeletonFile))
     }
 
     /**
@@ -105,9 +97,6 @@ abstract class JFlexTask : DefaultTask() {
      */
     @get:Input
     abstract val skipDfaMin: Property<Boolean>
-    init {
-        skipDfaMin.convention(jflexExtension.skipDfaMin)
-    }
 
     /**
      * Whether to try even harder to comply with the JLex interpretation of specs.
@@ -118,9 +107,6 @@ abstract class JFlexTask : DefaultTask() {
      */
     @get:Input
     abstract val jlex: Property<Boolean>
-    init {
-        jlex.convention(jflexExtension.jlex)
-    }
 
     /**
      * Whether to display the transition tables of NFA, initial DFA and minimized DFA.
@@ -131,9 +117,6 @@ abstract class JFlexTask : DefaultTask() {
      */
     @get:Input
     abstract val dump: Property<Boolean>
-    init {
-        dump.convention(jflexExtension.dump)
-    }
 
     /**
      * Whether the dot (`.`) meta character matches `[^\n]` instead of `[^\n\r\u000B\u000C\u0085\u2028\u2029]`.
@@ -144,9 +127,6 @@ abstract class JFlexTask : DefaultTask() {
      */
     @get:Input
     abstract val legacyDot: Property<Boolean>
-    init {
-        legacyDot.convention(jflexExtension.legacyDot)
-    }
 
     /**
      * Whether to display the error messages only.
@@ -157,9 +137,6 @@ abstract class JFlexTask : DefaultTask() {
      */
     @get:Input
     abstract val quiet: Property<Boolean>
-    init {
-        quiet.convention(jflexExtension.quiet)
-    }
 
     /**
      * Whether to display the corresponding warnings.
@@ -170,9 +147,6 @@ abstract class JFlexTask : DefaultTask() {
      */
     @get:Input
     abstract val warnUnused: Property<Boolean>
-    init {
-        warnUnused.convention(jflexExtension.warnUnused)
-    }
 
     /**
      * Whether to display the corresponding warnings.
@@ -183,9 +157,6 @@ abstract class JFlexTask : DefaultTask() {
      */
     @get:Input
     abstract val warnNeverMatch: Property<Boolean>
-    init {
-        warnNeverMatch.convention(jflexExtension.warnNeverMatch)
-    }
 
     /**
      * Whether to display the corresponding warnings.
@@ -196,9 +167,6 @@ abstract class JFlexTask : DefaultTask() {
      */
     @get:Input
     abstract val warnEmptyMatch: Property<Boolean>
-    init {
-        warnEmptyMatch.convention(jflexExtension.warnEmptyMatch)
-    }
 
     /**
      * Whether to display the corresponding warnings.
@@ -209,9 +177,6 @@ abstract class JFlexTask : DefaultTask() {
      */
     @get:Input
     abstract val warnCupsymAfterCup: Property<Boolean>
-    init {
-        warnCupsymAfterCup.convention(jflexExtension.warnCupsymAfterCup)
-    }
 
     /**
      * Whether to display the corresponding warnings.
@@ -222,9 +187,6 @@ abstract class JFlexTask : DefaultTask() {
      */
     @get:Input
     abstract val warnUnicodeTooLong: Property<Boolean>
-    init {
-        warnUnicodeTooLong.convention(jflexExtension.warnUnicodeTooLong)
-    }
 
     /**
      * Whether to display all warnings.
@@ -235,9 +197,6 @@ abstract class JFlexTask : DefaultTask() {
      */
     @get:Input
     abstract val warnAll: Property<Boolean>
-    init {
-        warnAll.convention(jflexExtension.warnAll)
-    }
 
     /**
      * JFlex classpath.
@@ -247,9 +206,11 @@ abstract class JFlexTask : DefaultTask() {
     @get:InputFiles
     @get:Classpath
     abstract val jflexClasspath: ConfigurableFileCollection
-    init {
-        jflexClasspath.setFrom(project.configurations.getByName(JFlexPlugin.JFLEX_CLASSPATH_CONFIGURATION))
-    }
+
+    private val rootDirectory: Directory = layout.projectDirectory
+
+    @get:Inject
+    internal abstract val fileOperations: FileOperations
 
     @get:Inject
     internal abstract val workerExecutor: WorkerExecutor
@@ -280,7 +241,7 @@ abstract class JFlexTask : DefaultTask() {
         // Submit JFlex work action to work queue for each input file
         for (inputFile in inputFiles) {
             workQueue.submit(JFlexWorkAction::class.java) { parameters ->
-                parameters.rootDirectory = project.rootDir
+                parameters.rootDirectory = rootDirectory.asFile
                 parameters.inputFile = inputFile
                 parameters.encoding = encoding
                 parameters.outputDirectory = outputDirectory

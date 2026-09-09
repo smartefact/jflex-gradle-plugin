@@ -26,9 +26,27 @@ open class JFlexPlugin : Plugin<Project> {
                 dependencies.add(project.dependencies.create("de.jflex:jflex:${jflexExtension.jflexVersion.get()}"))
             }
         }
-        project.configurations.resolvable(JFLEX_CLASSPATH_CONFIGURATION) { configuration ->
+        val jflexClasspathConfiguration = project.configurations.resolvable(JFLEX_CLASSPATH_CONFIGURATION) { configuration ->
             configuration.description = "JFlex classpath."
             configuration.extendsFrom(jflexConfiguration)
+        }
+        // Lazily configure `JFlexTask`s
+        project.tasks.withType(JFlexTask::class.java).configureEach { jflexTask ->
+            jflexTask.encoding.convention(jflexExtension.encoding)
+            jflexTask.outputDirectory.convention(jflexExtension.outputDirectory)
+            jflexTask.skeletonFile.convention(jflexExtension.skeletonFile)
+            jflexTask.skipDfaMin.convention(jflexExtension.skipDfaMin)
+            jflexTask.jlex.convention(jflexExtension.jlex)
+            jflexTask.dump.convention(jflexExtension.dump)
+            jflexTask.legacyDot.convention(jflexExtension.legacyDot)
+            jflexTask.quiet.convention(jflexExtension.quiet)
+            jflexTask.warnUnused.convention(jflexExtension.warnUnused)
+            jflexTask.warnNeverMatch.convention(jflexExtension.warnNeverMatch)
+            jflexTask.warnEmptyMatch.convention(jflexExtension.warnEmptyMatch)
+            jflexTask.warnCupsymAfterCup.convention(jflexExtension.warnCupsymAfterCup)
+            jflexTask.warnUnicodeTooLong.convention(jflexExtension.warnUnicodeTooLong)
+            jflexTask.warnAll.convention(jflexExtension.warnAll)
+            jflexTask.jflexClasspath.setFrom(jflexClasspathConfiguration)
         }
     }
 
