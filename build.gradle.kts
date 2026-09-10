@@ -8,7 +8,7 @@ plugins {
     id("org.smartefact.gradle-plugin-publish")
 }
 
-version = "0.1.0"
+version = "0.2.0"
 description = "Gradle plugin for JFlex."
 
 dependencies {

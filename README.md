@@ -15,7 +15,7 @@ Apply the JFlex plugin:
 
 ```kotlin
 plugins {
-    id("org.smartefact.jflex") version "0.1.0"
+    id("org.smartefact.jflex") version "0.2.0"
 }
 ```
 
