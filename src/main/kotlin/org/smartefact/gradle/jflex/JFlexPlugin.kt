@@ -36,7 +36,9 @@ open class JFlexPlugin : Plugin<Project> {
         // Lazily configure `JFlexTask`s
         project.tasks.withType(JFlexTask::class.java).configureEach { jflexTask ->
             jflexTask.encoding.convention(jflexExtension.encoding)
-            jflexTask.outputDirectory.convention(jflexExtension.outputDirectory)
+            jflexTask.outputDirectory.convention(jflexExtension.outputDirectory.orElse(
+                project.layout.buildDirectory.dir("generated/sources/${jflexTask.name}/java")
+            ))
             jflexTask.skeletonFile.convention(jflexExtension.skeletonFile)
             jflexTask.skipDfaMin.convention(jflexExtension.skipDfaMin)
             jflexTask.jlex.convention(jflexExtension.jlex)

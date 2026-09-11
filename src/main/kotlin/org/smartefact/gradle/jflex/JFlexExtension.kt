@@ -47,13 +47,8 @@ abstract class JFlexExtension(
      * Output directory.
      *
      * JFlex option: `-d`
-     *
-     * Defaults to `$buildDir/generated/sources/jflex/java`
      */
     abstract val outputDirectory: DirectoryProperty
-    init {
-        outputDirectory.convention(project.layout.buildDirectory.dir("generated/sources/jflex/java"))
-    }
 
     fun outputDirectory(outputDirectory: Any) {
         this.outputDirectory.set(project.file(outputDirectory))

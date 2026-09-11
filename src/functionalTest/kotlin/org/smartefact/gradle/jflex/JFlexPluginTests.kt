@@ -5,6 +5,7 @@ package org.smartefact.gradle.jflex
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -31,5 +32,12 @@ class JFlexPluginTests {
     @Test
     fun testDefaultJFlexTask() {
         assertNotNull(project.tasks.findByName(JFlexPlugin.DEFAULT_JFLEX_TASK_NAME))
+    }
+
+    @Test
+    fun testCustomJFlexTask() {
+        val taskName = "testJflex"
+        val task = project.tasks.register(taskName, JFlexTask::class.java).get()
+        assertTrue(task.outputDirectory.get().asFile.path.contains(taskName))
     }
 }
