@@ -2,16 +2,20 @@
 
 package org.smartefact.gradle.jflex
 
+import java.io.File
 import java.nio.charset.Charset
 import javax.inject.Inject
 import org.gradle.api.DefaultTask
+import org.gradle.api.GradleException
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.Directory
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.file.FileCollection
 import org.gradle.api.file.ProjectLayout
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.internal.file.FileOperations
 import org.gradle.api.provider.Property
+import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Classpath
 import org.gradle.api.tasks.Input
@@ -215,6 +219,12 @@ abstract class JFlexTask @Inject constructor(
     @get:Inject
     internal abstract val workerExecutor: WorkerExecutor
 
+    @get:InputFiles
+    @get:PathSensitive(PathSensitivity.NONE)
+    internal val includedFiles: Provider<FileCollection> = project.provider {
+        fileOperations.immutableFiles(inputFiles.files.flatMap { extractIncludedFiles(it) })
+    }
+
     @TaskAction
     fun run() {
         // Prepare parameters
@@ -259,5 +269,26 @@ abstract class JFlexTask @Inject constructor(
                 parameters.warnAll = warnAll
             }
         }
+    }
+
+    private fun extractIncludedFiles(file: File): Set<File> {
+        val parentDirectory = file.parentFile
+        val charsetName = encoding.get()
+        val charset = try {
+            Charset.forName(charsetName)
+        } catch (e: IllegalArgumentException) {
+            throw GradleException("The encoding \"$charsetName\" is not supported", e)
+        }
+        return file.bufferedReader(charset = charset).lineSequence()
+            .mapNotNull { line ->
+                INCLUDE_REGEX.matchEntire(line)?.groupValues[1]?.let {
+                    parentDirectory.resolve(it)
+                }
+            }
+            .toSet()
+    }
+
+    companion object {
+        private val INCLUDE_REGEX = Regex("%include\\s+(\\S+)\\s*")
     }
 }
