@@ -16,5 +16,6 @@ class JFlexPluginTests {
         assertNotNull(project.extensions.findByType(JFlexExtension::class.java))
         assertNotNull(project.configurations.findByName(JFlexPlugin.JFLEX_CONFIGURATION))
         assertNotNull(project.configurations.findByName(JFlexPlugin.JFLEX_CLASSPATH_CONFIGURATION))
+        assertNotNull(project.tasks.findByName(JFlexPlugin.DEFAULT_JFLEX_TASK_NAME))
     }
 }

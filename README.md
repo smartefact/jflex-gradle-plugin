@@ -28,29 +28,14 @@ jflex {
 }
 ```
 
-[More about the JFlex extension...](#jflex-extension)
+The JFlex plugin creates a `jflex` task which runs JFlex on all the `.jflex`, `.jlex`, `.lex` and `.flex` files in the `src/main/jflex` directory.
+The generated Java source files are part of the `main` source set.
 
-Create a JFlex task and configure it:
-
-```kotlin
-val jflex = tasks.register<JFlexTask>("jflex") {
-    inputFiles.from("src/jflex/MyRules.flex")
-    // Other properties...
-}
-```
-
-The JFlex plugin determines the destination packages of the generated files by parsing the `package` declaration in the input files;
-the actual location of the input files is ignored.
-
-[More about the JFlex task...](#jflex-task)
-
-Add the JFlex task to a Java source set:
+This default `jflex` task can be configured:
 
 ```kotlin
-sourceSets.main {
-    java {
-        srcDirs(jflex)
-    }
+tasks.jflex {
+    quiet = true
 }
 ```
 
@@ -87,6 +72,28 @@ It inherits all the properties from the `jflex` extension and adds the following
 | Property     | Description                                           | Default value |
 |--------------|-------------------------------------------------------|---------------|
 | `inputFiles` | Input files (the task will be skipped if it is empty) |               |
+
+`JFlexTask` determines the package of each generated Java source file by parsing the `package` declaration in the input file;
+the actual location of the input file is ignored.
+
+## Custom JFlex tasks
+
+Additional custom JFlex tasks can be created:
+
+```kotlin
+val myJflex = tasks.register<JFlexTask>("myJflex") {
+    inputFiles.from("src/jflex/MyRules.flex")
+    // Other properties...
+}
+
+sourceSets.main {
+    java {
+        srcDirs(myJflex)
+    }
+}
+```
+
+Adding the JFlex task itself as source directory in a Java source set ensures JFlex will be executed automatically before the compilation.
 
 ## Unsupported JFlex options
 

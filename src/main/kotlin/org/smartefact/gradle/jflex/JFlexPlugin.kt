@@ -4,6 +4,9 @@ package org.smartefact.gradle.jflex
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.tasks.SourceSet
+import org.gradle.api.tasks.SourceSetContainer
+import org.gradle.language.base.plugins.LifecycleBasePlugin
 
 /**
  * JFlex [Plugin].
@@ -48,6 +51,19 @@ open class JFlexPlugin : Plugin<Project> {
             jflexTask.warnAll.convention(jflexExtension.warnAll)
             jflexTask.jflexClasspath.setFrom(jflexClasspathConfiguration)
         }
+        // Register default `JFlexTask`
+        // NOTE: This task is based on the JFlex Maven plugin
+        val jflexTask = project.tasks.register(DEFAULT_JFLEX_TASK_NAME, JFlexTask::class.java) { jflexTask ->
+            jflexTask.description = "Generates the lexers with JFlex."
+            jflexTask.group = LifecycleBasePlugin.BUILD_GROUP
+            val inputDirectory = project.layout.projectDirectory.dir("src/main/jflex")
+            jflexTask.inputFiles.setFrom(project.fileTree(inputDirectory)
+                .include(listOf("jflex", "jlex", "lex", "flex").map { "**/*.$it" })
+            )
+        }
+        val sourceSets = project.extensions.getByType(SourceSetContainer::class.java)
+        val mainSourceSet = sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME)
+        mainSourceSet.java.srcDir(jflexTask)
     }
 
     companion object {
@@ -55,5 +71,6 @@ open class JFlexPlugin : Plugin<Project> {
         const val JFLEX_CONFIGURATION = "jflex"
         const val JFLEX_CLASSPATH_CONFIGURATION = "jflexClasspath"
         const val DEFAULT_JFLEX_VERSION = "1.9.1"
+        const val DEFAULT_JFLEX_TASK_NAME = "jflex"
     }
 }
