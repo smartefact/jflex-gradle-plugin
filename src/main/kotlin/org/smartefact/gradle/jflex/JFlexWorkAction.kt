@@ -2,7 +2,6 @@
 
 package org.smartefact.gradle.jflex
 
-import java.nio.charset.Charset
 import jflex.Main
 import jflex.exceptions.GeneratorException
 import jflex.exceptions.SilentExit
@@ -35,15 +34,11 @@ internal abstract class JFlexWorkAction : WorkAction<JFlexWorkParameters> {
         val warnUnicodeTooLong = parameters.warnUnicodeTooLong
         val warnAll = parameters.warnAll
         // Determine package and compute actual output directory
-        val charset = try {
-            Charset.forName(encoding)
-        } catch (e: IllegalArgumentException) {
-            throw GradleException("The encoding \"$encoding\" is not supported", e)
-        }
+        val charset = JFlexPlugin.encodingToCharset(encoding)
         val actualOutputDirectory = inputFile.bufferedReader(charset = charset).lineSequence()
             .mapNotNull { line -> PACKAGE_REGEX.matchEntire(line) }
             .firstOrNull()
-            ?.groupValues?.get(1)
+            ?.groupValues[1]
             ?.let {
                 it.split('.')
                     .fold(outputDirectory) { directory, name ->

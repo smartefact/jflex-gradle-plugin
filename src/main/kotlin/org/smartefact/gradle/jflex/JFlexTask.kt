@@ -6,7 +6,6 @@ import java.io.File
 import java.nio.charset.Charset
 import javax.inject.Inject
 import org.gradle.api.DefaultTask
-import org.gradle.api.GradleException
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.Directory
 import org.gradle.api.file.DirectoryProperty
@@ -273,13 +272,8 @@ abstract class JFlexTask @Inject constructor(
 
     private fun extractIncludedFiles(file: File): Set<File> {
         val parentDirectory = file.parentFile
-        val charsetName = encoding.get()
-        val charset = try {
-            Charset.forName(charsetName)
-        } catch (e: IllegalArgumentException) {
-            throw GradleException("The encoding \"$charsetName\" is not supported", e)
-        }
-        return file.bufferedReader(charset = charset).lineSequence()
+        return file.bufferedReader(charset = JFlexPlugin.encodingToCharset(encoding.get()))
+            .lineSequence()
             .mapNotNull { line ->
                 INCLUDE_REGEX.matchEntire(line)?.groupValues[1]?.let {
                     parentDirectory.resolve(it)
