@@ -105,6 +105,10 @@ The following JFlex options are not supported by this plugin:
 - `--time`: Gradle already measures the execution time of the tasks
 - `--version`, `--help`, `--info`, `--unicodever`: Special actions
 
+## Example
+
+See [`example`](example).
+
 ## Changelog
 
 See [`CHANGELOG.md`](CHANGELOG.md).

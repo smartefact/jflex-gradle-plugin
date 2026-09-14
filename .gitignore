@@ -2,5 +2,5 @@
 # Reference: https://git-scm.com/docs/gitignore
 
 # Gradle
-/.gradle/
-/build/
+.gradle/
+build/
