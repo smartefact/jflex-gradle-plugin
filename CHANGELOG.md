@@ -2,6 +2,12 @@
 
 This file follows the [Common Changelog](https://common-changelog.org/) style guide.
 
+## [0.3.1] - 2026-10-16
+
+### Fixed
+
+- Require Java 21 to run Gradle ([`7891d5d`](https://github.com/smartefact/jflex-gradle-plugin/commit/7891d5d2b5bdb926e4d3b69563dcc83e05b24a4d)) (Laurent Pireyn)
+
 ## [0.3.0] - 2026-09-11
 
 ### Added
@@ -28,6 +34,7 @@ This file follows the [Common Changelog](https://common-changelog.org/) style gu
 
 _First release._
 
+[0.3.1]: https://github.com/smartefact/jflex-gradle-plugin/releases/tag/0.3.1
 [0.3.0]: https://github.com/smartefact/jflex-gradle-plugin/releases/tag/0.3.0
 [0.2.0]: https://github.com/smartefact/jflex-gradle-plugin/releases/tag/0.2.0
 [0.1.0]: https://github.com/smartefact/jflex-gradle-plugin/releases/tag/0.1.0
