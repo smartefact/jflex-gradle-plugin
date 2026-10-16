@@ -3,4 +3,5 @@
 
 # Gradle
 .gradle/
+.kotlin/
 build/
