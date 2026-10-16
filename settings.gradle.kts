@@ -14,7 +14,7 @@ pluginManagement {
         resolutionStrategy {
             eachPlugin {
                 if (requested.id.id.startsWith("org.smartefact")) {
-                    useModule("org.smartefact:smartefact-gradle-conventions:0.1.0")
+                    useModule("org.smartefact:smartefact-gradle-conventions:0.2.0")
                 }
             }
         }
